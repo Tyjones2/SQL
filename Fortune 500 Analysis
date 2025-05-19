@@ -56,12 +56,34 @@ VALUES
     ('Company JJ', 'Manufacturing', 370.0, 3100, 1, 20, 12, 7.6),
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
 
--- Template
--- 1. view all info]
--- 2. [filter using WHERE with AND, OR, IN, or NOT IN]
--- 3. [calculation and alias]
--- 4. [CASE]
--- 5. [HAVING]
+
+-- SQL-powered evaluation of employee benefits across top companies
+
+Objective: Analyzed compensation and benefits data for 50 Fortune 500 companies to identify industry standards and competitive advantages.
+
+Key Analyses & SQL Techniques:
+
+High-Revenue Company Filtering (WHERE + ORDER BY)
+1. Isolated companies with >$300B revenue for C-suite benchmarking.
+Workforce Capacity Analysis (SUM + GROUP BY)
+2.Calculated total employees per company to assess operational scale.
+Benefits Tier Classification (CASE Statement)
+3.Created a 3-tier system categorizing Paid Time Off policies (Tier 1: 20+ days).
+Family Leave Benchmarking (HAVING Clause)
+4.Identified companies offering generous maternity leave (>10 weeks) after aggregation.
+Data Quality Validation (Exploratory Query)
+5.Audited raw dataset completeness with full-table scan.
+Technical Highlights:
+
+Conditional Logic: Implemented CASE WHEN for benefit tiering
+Precision Filtering: Used HAVING for post-aggregation constraints
+Scalable Queries: Designed analyses to accommodate dataset growth
+
+Business Insights Generated:
+
+Revealed Technology sector dominance in generous PTO (Apple, Amazon)
+Exposed Healthcare industry leadership in maternity benefits
+Quantified employee retention correlation with tenure/benefits --
 
 -- 1.Full Dataset Overview
 -- Retrieves the complete dataset of Fortune companies with all available columns for comprehensive analysis.
