@@ -1,6 +1,6 @@
 Project Overview
 
-This SQL project analyzes a comprehensive automotive dataset (from Turbo.az) to uncover key insights about pricing trends, fuel type distribution, and vehicle depreciation. The analysis consists of three core queries that form the foundation for a dynamic Tableau dashboard (currently in development).
+This SQL project analyzes a comprehensive automotive dataset (from Turbo.az) to uncover key insights about pricing trends, fuel type distribution, and vehicle depreciation. The analysis consists of three core queries that form the foundation for a dynamic Tableau dashboard.
 
 Key Objectives:
 
