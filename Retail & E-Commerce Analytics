@@ -1,0 +1,65 @@
+This collection demonstrates my SQL proficiency in solving real-world business problems across customer analytics, staff performance, and financial reporting. These queries showcase my ability to:
+
+Write complex joins across multiple database tables
+Implement proper aggregation with GROUP BY and HAVING clauses
+Filter and format temporal data using date functions
+Structure queries to answer specific business questions
+Optimize for readability and performance
+Key Technical Skills Demonstrated:
+
+Data Relationships: Successfully joined 2-3 tables in single queries while maintaining data integrity
+Aggregation: Used COUNT, SUM, and AVG with proper GROUP BY logic
+Date Handling: Implemented strftime() for month/year extraction and filtering
+Query Optimization: Applied LIMIT for top-N analysis and DESC sorting for business relevance
+Business Logic: Translated requirements like "active customers" and "replacement cost" into proper SQL filters
+These solutions were developed for practice with the Sakila DVD rental database, simulating real analytical challenges faced by retail and e-commerce businesses.
+
+Note: Queries are organized by increasing complexity, with clear commenting separating each business question.
+
+
+-- 1. Customer Information Retrieval - Write a query to display the first name, last name, and email of all active customers from store #1, ordered by last name.
+SELECT * FROM customer;
+SELECT first_name, last_name, email
+FROM customer
+WHERE store_id = 1 AND active = 1
+ORDER BY last_name;
+--
+--2. Customer Rental Patterns - Identify customers who have rented more than 30 films. Show their customer ID, name, and total rentals.
+SELECT * FROM customer;
+SELECT * FROM rental;
+SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(rental.rental_id) AS Total_rental
+FROM customer
+LEFT JOIN rental
+ON customer.customer_id = rental.customer_id
+GROUP BY customer.customer_id, customer.first_name, customer.last_name
+HAVING Total_rental > 30
+ORDER BY Total_rental DESC;
+--
+--3. Staff Performance - Which staff member processed the most rentals in July 2005? Include their name and rental count.
+SELECT * FROM staff;
+SELECT * FROM rental;
+SELECT staff.staff_id, staff.first_name, staff.last_name, COUNT(rental.rental_id) AS Rental_Count
+FROM staff
+JOIN rental
+ON staff.staff_id = rental.staff_id
+WHERE strftime('%Y-%m', rental_date) = '2005-07' 
+GROUP BY staff.staff_id, staff.first_name, staff.last_name
+ORDER BY Rental_Count
+LIMIT 1;
+--
+--4.Revenue by Month - Create a monthly revenue report for 2005 showing month and total payments received.
+--REPORT FOR 2005
+--SHOWING MONTHLY 
+--AND TOTAL PAYMETNS REVEIVED MONTHLY
+SELECT * FROM PAYMENT;
+SELECT SUM(amount) AS Payments_Recieved, strftime('%Y-%m', payment_date) AS Month
+FROM payment
+WHERE strftime('%Y', payment_date) = '2005'
+GROUP BY strftime('%Y-%m', payment_date)
+ORDER BY Month;
+--
+--5. Film Replacement Cost Analysis - What is the average replacement cost of films by rating category (G, PG, etc.)?
+SELECT * FROM FILM;
+SELECT AVG(replacement_cost) AS Replacement_Cost, rating
+FROM film
+GROUP BY rating;
