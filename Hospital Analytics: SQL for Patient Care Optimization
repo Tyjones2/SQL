@@ -1,0 +1,81 @@
+1: Patient Readmission Analysis
+Question: Find departments with readmission rates above 15%, showing department name, total patients, and readmission percentage. Only include departments with at least 50 patients.
+
+Key Skills Demonstrated:
+JOIN between patient and department tables
+Conditional aggregation for readmission calculation
+HAVING with complex conditions
+Healthcare-specific metrics
+
+SELECT d.department_name, COUNT(p.patient_id) AS total_patients,
+    ROUND(100.0 * SUM(CASE WHEN p.readmission_flag = 'Yes' THEN 1 ELSE 0 END) / 
+    COUNT(p.patient_id), 2) AS readmission_rate
+FROM  patients p
+JOIN departments d ON p.department_id = d.department_id
+GROUP BY d.department_name
+HAVING COUNT(p.patient_id) >= 50
+AND (100.0 * SUM(CASE WHEN p.readmission_flag = 'Yes' THEN 1 ELSE 0 END) / 
+COUNT(p.patient_id)) > 15
+ORDER BY readmission_rate DESC;
+--
+--
+
+2. Medication Cost Analysis
+Question: Identify the 5 most prescribed expensive medications (cost per unit above $50), including their total prescription count and average treatment duration.
+
+Key Skills Demonstrated:
+Filtering expensive medications
+Aggregating prescription data
+Healthcare cost analysis
+Limiting to top results
+
+SELECT m.medication_name, m.cost_per_unit, COUNT(pm.prescription_id) AS prescription_count,
+    ROUND(AVG(pm.treatment_duration_days), 1) AS avg_duration_days
+FROM prescribed_medications pm
+JOIN medications m ON pm.medication_id = m.medication_id
+WHERE m.cost_per_unit > 50
+GROUP BY m.medication_name, m.cost_per_unit
+ORDER BY prescription_count DESC
+LIMIT 5;
+--
+--
+
+3. Patient Length of Stay Outliers
+Question: Find patients with unusually long hospital stays (top 1% by department) and analyze their characteristics including insurance type and discharge disposition.
+
+Key Skills Demonstrated:
+Statistical outlier detection
+CTEs for complex analysis
+Healthcare operational metrics
+Cohort analysis by multiple dimensions
+
+WITH department_stats AS (
+SELECT department_id, AVG(length_of_stay_days) AS avg_stay, STDDEV(length_of_stay_days) AS stddev_stay
+    FROM patients
+    GROUP BY department_id
+),
+
+patient_outliers AS (
+SELECT p.patient_id, p.length_of_stay_days, p.insurance_type, p.discharge_disposition, d.department_name,
+        (p.length_of_stay_days - ds.avg_stay) / NULLIF(ds.stddev_stay, 0) AS z_score
+    FROM patients p
+    JOIN department_stats ds ON p.department_id = ds.department_id
+    JOIN departments d ON p.department_id = d.department_id
+    WHERE p.length_of_stay_days > ds.avg_stay + 2 * ds.stddev_stay  -- Top ~1%
+)
+
+SELECT department_name, insurance_type, discharge_disposition, COUNT(patient_id) AS outlier_count,
+    ROUND(AVG(length_of_stay_days), 1) AS avg_outlier_stay
+FROM patient_outliers
+GROUP BY department_name, insurance_type, discharge_disposition
+ORDER BY outlier_count DESC;
+
+
+
+
+
+
+
+
+
+
