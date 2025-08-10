@@ -1,0 +1,16 @@
+-- *"Find all job titles where the highest-paid employee earns at least 3x more than the title's average pay."*
+
+WITH all_jobtitles AS (
+    SELECT 
+    jobtitle,
+    MAX(totalpay) AS max_tp,
+    AVG(totalpay) AS avg_tp
+    FROM salaries
+    group by jobtitle
+)
+SELECT jobtitle,
+    max_tp,
+    avg_tp
+    from all_jobtitles
+    WHERE max_tp >= 3* avg_tp
+    order by jobtitle;
