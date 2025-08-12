@@ -1,3 +1,15 @@
+--1. Create a CTE that selects employees and jobtitle who earn a salary above $50,000.
+WITH highest_pay AS (
+    SELECT employeename, jobtitle, totalpay
+    from salaries
+    WHERE totalpay > 30000
+)
+SELECT employeename, jobtitle, totalpay
+FROM highest_pay;
+
+
+
+
 -- *"Find all job titles where the highest-paid employee earns at least 3x more than the title's average pay."*
 
 WITH all_jobtitles AS (
